@@ -4,24 +4,49 @@ import { MissingExchangeRateError } from '../src/MissingExchangeRateError'
 
 describe('Bank', function () {
 
-  test('convert from eur to usd returns number', () => {
-    expect(Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2).Convert(10, Currency.EUR, Currency.USD)).toBe(12)
+  test('convert from EUR to USD, assert it returns the correct number', () => {
+    //Arrange
+    let bankTest = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
+
+    //Act
+    let result = bankTest.Convert(10, Currency.EUR, Currency.USD)
+
+    //Assert
+    expect(result).toBe(12)
   })
 
-  test('convert from usd to usd returns same value', () => {
-    expect(Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2).Convert(10, Currency.EUR, Currency.EUR)).toBe(10)
+  test('convert from usd to usd, assert the returns same value', () => {
+    //Arrange
+    let bankTest = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
+
+    //Act
+    let result = bankTest.Convert(10, Currency.EUR, Currency.EUR)
+
+    //Assert
+    expect(result).toBe(10)
   })
 
-  test('convert throws error in case of missing exchange rates', () => {
-    expect(() => Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2).Convert(10, Currency.EUR, Currency.KRW))
-      .toThrow(MissingExchangeRateError)
+
+  test("convert exchange rate that isn't specified, must throw MissingExchangeRateError", () => {
+    //Arrange
+    let bankTest = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
+
+    //Act + Assert
+    expect(() => bankTest.Convert(10, Currency.EUR, Currency.KRW)).toThrow(MissingExchangeRateError)
   })
 
-  test('convert with different exchange rates returns different numbers', () => {
-    expect(Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2).Convert(10, Currency.EUR, Currency.USD)).toBe(12)
+  test('Convert same currency but with different exchange rate, must assert that convert result is different', () => {
 
-    expect(Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.3).Convert(10, Currency.EUR, Currency.USD)).toBe(13)
+    //Arrange
+    let bankTest = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
+    let result = bankTest.Convert(10, Currency.EUR, Currency.USD)
 
-    expect(Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.5).Convert(10, Currency.EUR, Currency.USD)).toBe(15)
+    //Act
+    bankTest.AddExchangeRate(Currency.EUR, Currency.USD, 1.3)
+    let newResult = bankTest.Convert(10, Currency.EUR, Currency.USD)
+
+    //Assert
+    expect(result == newResult).toBe(false)
+
   })
 })
