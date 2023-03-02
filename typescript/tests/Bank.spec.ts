@@ -32,7 +32,8 @@ describe('Bank', function () {
     let bankTest = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
 
     //Act + Assert
-    expect(() => bankTest.Convert(10, Currency.EUR, Currency.KRW)).toThrow(MissingExchangeRateError)
+    expect(() => bankTest.Convert(10, Currency.EUR, Currency.KRW)).toThrow(MissingExchangeRateError).toThrow("EUR-> KRW")
+
   })
 
   test('Convert same currency but with different exchange rate, must assert that convert result is different', () => {
