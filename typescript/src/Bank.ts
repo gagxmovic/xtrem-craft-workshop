@@ -48,10 +48,20 @@ export class Bank {
 
   }
 
+  /**
+   * @param currencyFrom 
+   * @param currencyTo 
+   * @return un string qui correspond à la clé de la map entre 2 currency
+   */
   private keyForExchangeRates(currencyFrom: Currency, currencyTo: Currency): string {
     return currencyFrom + '->' + currencyTo
   }
 
+  /**
+   * @param currencyFrom 
+   * @param currencyTo 
+   * @returns vrai si on peut convertir et faux si on peut pas
+   */
   private canConvert(currencyFrom: Currency, currencyTo: Currency) {
     return currencyFrom === currencyTo || this._exchangeRates.has(this.keyForExchangeRates(currencyFrom, currencyTo))
   }
