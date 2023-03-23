@@ -7,7 +7,7 @@ class Portfolio {
 
         evaluate(to: Currency, bank: Bank): number {
         return this.count.reduce((acc: number, cur: { amount: number, currency: Currency }): number => {
-            return acc + bank.Convert(cur.amount, cur.currency, to)
+            return acc + bank.ConvertOld(cur.amount, cur.currency, to)
         }, 0)
     }
     add(amount: number, currency: Currency): void {
