@@ -51,5 +51,16 @@ describe('Money', function () {
         expect(action).toThrow(NegativeValueError);
     })
 
+    test('unable to multiply by negative', () => {
+        //Arrange
+        let money = new Money(78, Currency.USD);
+
+        //Act
+        const action = () => money.times(-69);
+
+        //Assert
+        expect(action).toThrow(NegativeValueError);
+    })
+
 
 })
