@@ -22,5 +22,5 @@ jobs:
       - run: |
           cd typescript
           npm install
-          stryker init
+          npx stryker init
           npx stryker run
