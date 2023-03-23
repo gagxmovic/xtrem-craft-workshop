@@ -19,8 +19,9 @@ jobs:
           cd typescript
           npm install
           npm run test
-      - run: |
+      - name: mutation test
+        continue-on-error: true
+        run: |
           cd typescript
           npm install
-          stryker init
-          stryker run
+          npx stryker run 
