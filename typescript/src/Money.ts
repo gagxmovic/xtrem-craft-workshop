@@ -7,7 +7,7 @@ export class Money {
     public currency: Currency;
 
     constructor(value: number, currency: Currency) {
-        if(value < 0) {
+        if (value < 0) {
             throw new NegativeValueError();
         }
         this.value = value;
@@ -18,25 +18,21 @@ export class Money {
         if (amount.currency != this.currency) {
             throw new WrongTypeOfCurrencyError(amount.currency, this.currency);
         } else {
-            let newMoney = new Money( this.value + amount.value, this.currency);
+            let newMoney = new Money(this.value + amount.value, this.currency);
             return newMoney;
         }
     }
 
     public times(amount: number): Money {
-        if (amount < 0) {
-            throw new NegativeValueError();
-        } else {
-            let newMoney = new Money( amount * this.value, this.currency);
-            return newMoney;
-        }
+        let newMoney = new Money(amount * this.value, this.currency);
+        return newMoney;
     }
 
     public divide(amount: number): Money {
-        if (amount <= 0) {
+        if (amount == 0) {
             throw new NegativeValueError();
         } else {
-            let newMoney = new Money( this.value / amount, this.currency);
+            let newMoney = new Money(this.value / amount, this.currency);
             return newMoney;
         }
     }
