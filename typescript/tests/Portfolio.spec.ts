@@ -4,16 +4,16 @@ import { Currency } from "../src/Currency";
 import { Money } from "../src/Money";
 
 class Portfolio {
-    private count: { amount: number, currency: Currency }[] = [];
+    private count: Money[] = [];
 
         evaluate(to: Currency, bank: Bank): number {
-        return this.count.reduce((acc: number, cur: { amount: number, currency: Currency }): number => {
-            let money = new Money(cur.amount,cur.currency);
+        return this.count.reduce((acc: number, mon: Money): number => {
+            let money = new Money(mon.value,mon.currency);
             return acc + bank.Convert(money , to).value
         }, 0)
     }
-    add(amount: number, currency: Currency): void {
-        this.count.push({ amount: amount, currency: currency });
+    add(money: Money): void {
+        this.count.push(money);
 
     }
 
@@ -26,8 +26,9 @@ describe('Portfolio', () => {
     test(' 5 USD + 10 EUR = 17 USD', () => {
         //Arrange
         const portfolio = new Portfolio();
-        portfolio.add(5, Currency.USD);
-        portfolio.add(10, Currency.EUR);
+        
+        portfolio.add(new Money(5, Currency.USD));
+        portfolio.add(new Money(10, Currency.EUR));
 
         //Act
         const result = portfolio.evaluate(Currency.USD, bank)
@@ -53,7 +54,7 @@ describe('Portfolio', () => {
     it('', () => {
         //Arrange
         const portfolio = new Portfolio();
-        portfolio.add(5, Currency.USD);
+        portfolio.add(new Money(5, Currency.USD));
 
         //Act
         const result = portfolio.evaluate(Currency.USD, bank)
@@ -66,8 +67,8 @@ describe('Portfolio', () => {
     test(' 1 USD + 1100 KRW = 2200 KRW', () => {
         //Arrange
         const portfolio = new Portfolio();
-        portfolio.add(1, Currency.USD);
-        portfolio.add(1100, Currency.KRW);
+        portfolio.add(new Money(1, Currency.USD));
+        portfolio.add(new Money(1100, Currency.KRW));
 
         bank.AddExchangeRate(Currency.USD, Currency.KRW, 1100);
 
@@ -83,8 +84,8 @@ describe('Portfolio', () => {
     test(' 5 USD + 10 EUR = 18940 KRW', () => {
         //Arrange
         const portfolio = new Portfolio();
-        portfolio.add(5, Currency.USD);
-        portfolio.add(10, Currency.EUR);
+        portfolio.add(new Money(5, Currency.USD));
+        portfolio.add(new Money(10, Currency.EUR));
 
         bank.AddExchangeRate(Currency.USD, Currency.EUR, 0.82);
         bank.AddExchangeRate(Currency.EUR, Currency.KRW, 1344);
@@ -101,8 +102,8 @@ describe('Portfolio', () => {
     test(' 5 USD + 10 EUR = 14,1 EUR', () => {
         //Arrange
         const portfolio = new Portfolio();
-        portfolio.add(5,Currency.USD);
-        portfolio.add(10,Currency.EUR);
+        portfolio.add(new Money(5, Currency.USD));
+        portfolio.add(new Money(10, Currency.EUR));
         bank.AddExchangeRate(Currency.USD, Currency.EUR, 0.82);
 
         //Act
