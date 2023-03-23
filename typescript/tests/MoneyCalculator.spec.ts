@@ -3,7 +3,6 @@ import { MoneyCalculator } from '../src/MoneyCalculator'
 
 describe('Money', function () {
   test('Add USD, assert that 5 + 10 return 15', () => {
-
     let result = MoneyCalculator.Add(5, Currency.USD, 10)
     expect(result).toBe(15)
   })
