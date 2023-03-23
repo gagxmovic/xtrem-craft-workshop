@@ -26,4 +26,12 @@ export class Money {
             this.value = amount * this.value;
         }
     }
+
+    public divide(amount: number) {
+        if (amount <= 0) {
+            throw new NegativeValueError();
+        } else {
+            this.value = this.value / amount;
+        }
+    }
 }
