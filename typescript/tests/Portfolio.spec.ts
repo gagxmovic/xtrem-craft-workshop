@@ -4,18 +4,23 @@ import { Currency } from "../src/Currency";
 import { Money } from "../src/Money";
 
 class Portfolio {
-    private count: Money[] = [];
+    private moneys: Money[] = [];
 
+        private constructor(moneys : Money[] = []){
+            this.moneys = moneys;
+        }
         evaluate(to: Currency, bank: Bank): Money {
-        return this.count.reduce((acc: Money, mon: Money): Money => {
+        return this.moneys.reduce((acc: Money, mon: Money): Money => {
             let money = new Money(mon.value,mon.currency);
             return new Money(acc.value + bank.Convert(money , to).value, to);
         }, new Money(0,to))
     }
     add(money: Money): Portfolio {
-        let portfolio = new Portfolio();
-        portfolio.count = [...this.count];
-        portfolio.count.push(money);
+        const newList = [...this.moneys].concat([money]);
+        newList.push(money);
+        let portfolio = new Portfolio(newList);
+        
+        
         return portfolio;
 
     }
