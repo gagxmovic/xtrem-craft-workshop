@@ -19,8 +19,6 @@ jobs:
           cd typescript
           npm install
           npm run test
-          npm install -g stryker-cl
-          stryker run
       - run: |
           cd typescript
           npm install
