@@ -10,11 +10,11 @@ describe('Money', function () {
         let money = new Money(2, Currency.EUR);
 
         //Act
-        money.times(2);
+        let result = money.times(2);
 
         //Assert
-        expect(money.currency).toBe(Currency.EUR);
-        expect(money.value).toBe(4)
+        expect(result.currency).toBe(Currency.EUR);
+        expect(result.value).toBe(4)
     })
 
     test('Add 5 USD to 90 USD and return 95 USD', () => {
@@ -22,11 +22,11 @@ describe('Money', function () {
         let money = new Money(90, Currency.USD);
 
         //Act
-        money.add(new Money(5, Currency.USD));
+        let result = money.add(new Money(5, Currency.USD));
 
         //Assert
-        expect(money.currency).toBe(Currency.USD);
-        expect(money.value).toBe(95)
+        expect(result.currency).toBe(Currency.USD);
+        expect(result.value).toBe(95)
     })
 
     test('Divide 20 KRW by 5 and return 4 KRW', () => {
@@ -34,11 +34,11 @@ describe('Money', function () {
         let money = new Money(20, Currency.KRW);
 
         //Act
-        money.divide(5);
+        let result = money.divide(5);
 
         //Assert
-        expect(money.currency).toBe(Currency.KRW);
-        expect(money.value).toBe(4)
+        expect(result.currency).toBe(Currency.KRW);
+        expect(result.value).toBe(4)
     })
 
     test('unable to divide by 0', () => {

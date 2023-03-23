@@ -1,13 +1,15 @@
 import { prototype } from "events";
 import { Bank } from "../src/Bank";
 import { Currency } from "../src/Currency";
+import { Money } from "../src/Money";
 
 class Portfolio {
     private count: { amount: number, currency: Currency }[] = [];
 
         evaluate(to: Currency, bank: Bank): number {
         return this.count.reduce((acc: number, cur: { amount: number, currency: Currency }): number => {
-            return acc + bank.Convert(cur.amount, cur.currency, to)
+            let money = new Money(cur.amount,cur.currency);
+            return acc + bank.Convert(money , to).value
         }, 0)
     }
     add(amount: number, currency: Currency): void {
