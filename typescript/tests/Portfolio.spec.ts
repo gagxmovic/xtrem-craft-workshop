@@ -30,11 +30,11 @@ describe('Portfolio', () => {
         //Arrange
         const portfolio = new Portfolio();
         
-        portfolio.add(new Money(5, Currency.USD));
-        portfolio.add(new Money(10, Currency.EUR));
+        const finalPortfolio = portfolio.add(new Money(5, Currency.USD)).add(new Money(10, Currency.EUR));
+        
 
         //Act
-        const result = portfolio.evaluate(Currency.USD, bank)
+        const result = finalPortfolio.evaluate(Currency.USD, bank)
 
 
         //Assert
@@ -57,10 +57,10 @@ describe('Portfolio', () => {
     it('', () => {
         //Arrange
         const portfolio = new Portfolio();
-        portfolio.add(new Money(5, Currency.USD));
+        const finalPortfolio = portfolio.add(new Money(5, Currency.USD));
 
         //Act
-        const result = portfolio.evaluate(Currency.USD, bank)
+        const result = finalPortfolio.evaluate(Currency.USD, bank)
 
         //Assert
         expect(result.value).toBe(5);
@@ -70,13 +70,12 @@ describe('Portfolio', () => {
     test(' 1 USD + 1100 KRW = 2200 KRW', () => {
         //Arrange
         const portfolio = new Portfolio();
-        portfolio.add(new Money(1, Currency.USD));
-        portfolio.add(new Money(1100, Currency.KRW));
+        const finalPortfolio = portfolio.add(new Money(1, Currency.USD)).add(new Money(1100, Currency.KRW));
 
         bank.AddExchangeRate(Currency.USD, Currency.KRW, 1100);
 
         //Act
-        const result = portfolio.evaluate(Currency.KRW, bank)
+        const result = finalPortfolio.evaluate(Currency.KRW, bank)
 
 
         //Assert
