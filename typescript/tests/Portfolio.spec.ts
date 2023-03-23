@@ -12,8 +12,11 @@ class Portfolio {
             return new Money(acc.value + bank.Convert(money , to).value, to);
         }, new Money(0,to))
     }
-    add(money: Money): void {
-        this.count.push(money);
+    add(money: Money): Portfolio {
+        let portfolio = new Portfolio();
+        portfolio.count = this.count;
+        portfolio.count.push(money);
+        return portfolio;
 
     }
 
