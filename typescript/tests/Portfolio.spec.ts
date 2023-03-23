@@ -6,11 +6,11 @@ import { Money } from "../src/Money";
 class Portfolio {
     private count: Money[] = [];
 
-        evaluate(to: Currency, bank: Bank): number {
-        return this.count.reduce((acc: number, mon: Money): number => {
+        evaluate(to: Currency, bank: Bank): Money {
+        return this.count.reduce((acc: Money, mon: Money): Money => {
             let money = new Money(mon.value,mon.currency);
-            return acc + bank.Convert(money , to).value
-        }, 0)
+            return new Money(acc.value + bank.Convert(money , to).value, to);
+        }, new Money(0,to))
     }
     add(money: Money): void {
         this.count.push(money);
@@ -35,7 +35,7 @@ describe('Portfolio', () => {
 
 
         //Assert
-        expect(result).toBe(17);
+        expect(result.value).toBe(17);
 
     })
 
@@ -47,7 +47,7 @@ describe('Portfolio', () => {
         const result = portfolio.evaluate(Currency.USD, bank)
 
         //Assert
-        expect(result).toBe(0);
+        expect(result.value).toBe(0);
 
     })
 
@@ -60,7 +60,7 @@ describe('Portfolio', () => {
         const result = portfolio.evaluate(Currency.USD, bank)
 
         //Assert
-        expect(result).toBe(5);
+        expect(result.value).toBe(5);
 
     })
 
@@ -77,7 +77,7 @@ describe('Portfolio', () => {
 
 
         //Assert
-        expect(result).toBe(2200);
+        expect(result.value).toBe(2200);
 
     })
 
@@ -95,7 +95,7 @@ describe('Portfolio', () => {
 
 
         //Assert
-        expect(result).toBe(18940);
+        expect(result.value).toBe(18940);
 
     })
 
@@ -110,6 +110,6 @@ describe('Portfolio', () => {
         const result = portfolio.evaluate(Currency.EUR, bank)
 
         //Assert
-        expect(result).toBe(14.1);
+        expect(result.value).toBe(14.1);
     })
 })
