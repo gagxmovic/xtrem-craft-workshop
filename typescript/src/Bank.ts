@@ -1,5 +1,6 @@
 import { Currency } from './Currency'
 import { MissingExchangeRateError } from './MissingExchangeRateError'
+import { Money } from './Money'
 
 export class Bank {
   private readonly _exchangeRates: Map<string, number> = new Map()
@@ -38,7 +39,7 @@ export class Bank {
    * 
    * Convertit la currencyFrom en currencyTo en fonction du taux de change si il existe
    */
-  Convert(amount: number, currencyFrom: Currency, currencyTo: Currency): number {
+  ConvertOld(amount: number, currencyFrom: Currency, currencyTo: Currency): number {
     if (!(this.canConvert(currencyFrom, currencyTo))) { throw new MissingExchangeRateError(currencyFrom, currencyTo) }
 
     if (currencyTo === currencyFrom) {
@@ -46,6 +47,16 @@ export class Bank {
     }
     return amount * this._exchangeRates.get(this.keyForExchangeRates(currencyFrom, currencyTo))
 
+  }
+
+  Convert(money: Money, currency: Currency): Money {
+    if (!(this.canConvert(money.currency, currency))) { throw new MissingExchangeRateError(money.currency, currency) }
+
+    if (money.currency === currency) {
+      return money
+    }
+
+    return new Money(money.value * this._exchangeRates.get(this.keyForExchangeRates(money.currency, currency)), currency)
   }
 
   /**
