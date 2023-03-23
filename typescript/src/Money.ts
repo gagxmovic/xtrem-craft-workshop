@@ -1,4 +1,5 @@
 import { Currency } from "./Currency";
+import { NegativeValueError } from "./NegativeValueError";
 import { WrongTypeOfCurrencyError } from "./WrongTypeOfCurrencyError";
 
 export class Money {
@@ -10,9 +11,17 @@ export class Money {
         this.currency = currency;
     }
 
-    public add(amount: Money): number {
+    public add(amount: Money) {
         if(amount.currency != this.currency) {
             throw new WrongTypeOfCurrencyError(amount.currency, this.currency);
+        }
+    }
+
+    public times(amount: number){
+        if(amount < 0){
+            throw new NegativeValueError();
+        }else{
+            this.value = amount*this.value; 
         }
     }
 }

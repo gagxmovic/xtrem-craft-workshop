@@ -8,11 +8,11 @@ describe('Money', function () {
       let money = new Money(2, Currency.EUR);
   
       //Act
-      let result = money.times(2);
+      money.times(2);
   
       //Assert
-      expect(result.currency).toBe(Currency.EUR);
-      expect(result.amount).toBe(4)
+      expect(money.currency).toBe(Currency.EUR);
+      expect(money.value).toBe(4)
     })
   
    
