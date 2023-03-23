@@ -1,5 +1,6 @@
 import { Currency } from "../src/Currency";
 import { Money } from "../src/Money";
+import { NegativeValueError } from "../src/NegativeValueError";
 
 describe('Money', function () {
 
@@ -37,6 +38,17 @@ describe('Money', function () {
         //Assert
         expect(money.currency).toBe(Currency.KRW);
         expect(money.value).toBe(4)
+    })
+
+    test('unable to divide by 0', () => {
+        //Arrange
+        let money = new Money(20, Currency.KRW);
+
+        //Act
+        const action = () => money.divide(0);
+
+        //Assert
+        expect(action).toThrow(NegativeValueError);
     })
 
 
