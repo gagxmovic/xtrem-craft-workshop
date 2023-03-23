@@ -86,14 +86,13 @@ describe('Portfolio', () => {
     test(' 5 USD + 10 EUR = 18940 KRW', () => {
         //Arrange
         const portfolio = new Portfolio();
-        portfolio.add(new Money(5, Currency.USD));
-        portfolio.add(new Money(10, Currency.EUR));
+        const finalPortfolio = portfolio.add(new Money(5, Currency.USD)).add(new Money(10, Currency.EUR));
 
         bank.AddExchangeRate(Currency.USD, Currency.EUR, 0.82);
         bank.AddExchangeRate(Currency.EUR, Currency.KRW, 1344);
 
         //Act
-        const result = portfolio.evaluate(Currency.KRW, bank)
+        const result = finalPortfolio.evaluate(Currency.KRW, bank)
 
 
         //Assert
