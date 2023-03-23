@@ -63,4 +63,15 @@ describe('Money', function () {
     })
 
 
+    test('unable to divide by negative', () => {
+        //Arrange
+        let money = new Money(20, Currency.KRW);
+
+        //Act
+        const action = () => money.divide(-69);
+
+        //Assert
+        expect(action).toThrow(NegativeValueError);
+    })
+
 })

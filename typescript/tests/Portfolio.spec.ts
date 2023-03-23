@@ -99,20 +99,6 @@ describe('Portfolio', () => {
     test(' 5 USD + 10 EUR = 14,1 EUR', () => {
         //Arrange
         const portfolio = new Portfolio();
-        portfolio.add(5, Currency.USD);
-        portfolio.add(10, Currency.EUR);
-        bank.AddExchangeRate(Currency.USD, Currency.EUR, 0.82);
-
-        //Act
-        const result = portfolio.evaluate(Currency.EUR, bank)
-
-        //Assert
-        expect(result).toBe(14.1);
-    })
-
-    test(' 5 USD + 10 EUR = 14,1 EUR', () => {
-        //Arrange
-        const portfolio = new Portfolio();
         portfolio.add(5,Currency.USD);
         portfolio.add(10,Currency.EUR);
         bank.AddExchangeRate(Currency.USD, Currency.EUR, 0.82);
