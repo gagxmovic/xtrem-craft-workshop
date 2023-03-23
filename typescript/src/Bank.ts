@@ -47,6 +47,7 @@ export class Bank {
     return amount * this._exchangeRates.get(this.keyForExchangeRates(currencyFrom, currencyTo))
 
   }
+  
 
   /**
    * @param currencyFrom 
