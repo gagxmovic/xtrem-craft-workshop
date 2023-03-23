@@ -22,6 +22,5 @@ jobs:
       - run: |
           cd typescript
           npm install
-          npm install --save-dev @stryker-mutator/core
           stryker init
-          stryker run
+          npx stryker run
