@@ -14,7 +14,7 @@ class Portfolio {
     }
     add(money: Money): Portfolio {
         let portfolio = new Portfolio();
-        portfolio.count = this.count;
+        portfolio.count = [...this.count];
         portfolio.count.push(money);
         return portfolio;
 
