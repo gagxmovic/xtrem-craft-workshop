@@ -1,6 +1,7 @@
 import { Currency } from "../src/Currency";
 import { Money } from "../src/Money";
 import { NegativeValueError } from "../src/NegativeValueError";
+import { WrongTypeOfCurrencyError } from "../src/WrongTypeOfCurrencyError";
 
 describe('Money', function () {
 
@@ -62,5 +63,27 @@ describe('Money', function () {
         expect(action).toThrow(NegativeValueError);
     })
 
+
+    test('unable to divide by negative', () => {
+        //Arrange
+        let money = new Money(20, Currency.KRW);
+
+        //Act
+        const action = () => money.divide(-69);
+
+        //Assert
+        expect(action).toThrow(NegativeValueError);
+    })
+
+    test('unable to add with different Currency', () => {
+        //Arrange
+        let money = new Money(20, Currency.KRW);
+
+        //Act
+        const action = () => money.add(new Money(5, Currency.USD));;
+
+        //Assert
+        expect(action).toThrow(WrongTypeOfCurrencyError);
+    })
 
 })

@@ -1,10 +1,11 @@
+import { prototype } from "events";
 import { Bank } from "../src/Bank";
 import { Currency } from "../src/Currency";
 
 class Portfolio {
     private count: { amount: number, currency: Currency }[] = [];
 
-    evaluate(to: Currency, bank: Bank): number {
+        evaluate(to: Currency, bank: Bank): number {
         return this.count.reduce((acc: number, cur: { amount: number, currency: Currency }): number => {
             return acc + bank.Convert(cur.amount, cur.currency, to)
         }, 0)
@@ -98,8 +99,8 @@ describe('Portfolio', () => {
     test(' 5 USD + 10 EUR = 14,1 EUR', () => {
         //Arrange
         const portfolio = new Portfolio();
-        portfolio.add(5, Currency.USD);
-        portfolio.add(10, Currency.EUR);
+        portfolio.add(5,Currency.USD);
+        portfolio.add(10,Currency.EUR);
         bank.AddExchangeRate(Currency.USD, Currency.EUR, 0.82);
 
         //Act
