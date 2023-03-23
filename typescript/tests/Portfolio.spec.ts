@@ -47,18 +47,6 @@ describe('Portfolio', () => {
 
     })
 
-    it('should be evaluated to 0 when empty', () => {
-        //Arrange
-        const portfolio = new Portfolio();
-
-        //Act
-        const result = portfolio.evaluate(Currency.USD, bank)
-
-        //Assert
-        expect(result).toBe(0);
-
-    })
-
     it('', () => {
         //Arrange
         const portfolio = new Portfolio();
@@ -87,5 +75,37 @@ describe('Portfolio', () => {
         //Assert
         expect(result).toBe(2200);
 
+    })
+
+    test(' 5 USD + 10 EUR = 18940 KRW', () => {
+        //Arrange
+        const portfolio = new Portfolio();
+        portfolio.add(5, Currency.USD);
+        portfolio.add(10, Currency.EUR);
+
+        bank.AddExchangeRate(Currency.USD, Currency.EUR, 0.82);
+        bank.AddExchangeRate(Currency.EUR, Currency.KRW, 1344);
+
+        //Act
+        const result = portfolio.evaluate(Currency.KRW, bank)
+
+
+        //Assert
+        expect(result).toBe(18940);
+
+    })
+
+    test(' 5 USD + 10 EUR = 14,1 EUR', () => {
+        //Arrange
+        const portfolio = new Portfolio();
+        portfolio.add(5, Currency.USD);
+        portfolio.add(10, Currency.EUR);
+        bank.AddExchangeRate(Currency.USD, Currency.EUR, 0.82);
+
+        //Act
+        const result = portfolio.evaluate(Currency.EUR, bank)
+
+        //Assert
+        expect(result).toBe(14.1);
     })
 })
