@@ -46,8 +46,8 @@ describe('Bank', function () {
     let result = bankTest.Convert(money, Currency.USD)
 
     //Act
-    bankTest.AddExchangeRate(Currency.EUR, Currency.USD, 1.3)
-    let newResult = bankTest.Convert(money, Currency.USD)
+    const finalBank = bankTest.NewAddExchangeRate(Currency.EUR, Currency.USD, 1.3)
+    let newResult = finalBank.Convert(money, Currency.USD)
 
     //Assert
     expect(result.value == newResult.value).toBe(false)

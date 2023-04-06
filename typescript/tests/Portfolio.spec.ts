@@ -6,7 +6,7 @@ import { Money } from "../src/Money";
 class Portfolio {
     private moneys: Money[] = [];
 
-        private constructor(moneys : Money[] = []){
+        public constructor(moneys : Money[] = []){
             this.moneys = moneys;
         }
         evaluate(to: Currency, bank: Bank): Money {
@@ -17,10 +17,7 @@ class Portfolio {
     }
     add(money: Money): Portfolio {
         const newList = [...this.moneys].concat([money]);
-        newList.push(money);
         let portfolio = new Portfolio(newList);
-        
-        
         return portfolio;
 
     }
@@ -36,7 +33,6 @@ describe('Portfolio', () => {
         const portfolio = new Portfolio();
         
         const finalPortfolio = portfolio.add(new Money(5, Currency.USD)).add(new Money(10, Currency.EUR));
-        
 
         //Act
         const result = finalPortfolio.evaluate(Currency.USD, bank)
@@ -77,10 +73,10 @@ describe('Portfolio', () => {
         const portfolio = new Portfolio();
         const finalPortfolio = portfolio.add(new Money(1, Currency.USD)).add(new Money(1100, Currency.KRW));
 
-        bank.AddExchangeRate(Currency.USD, Currency.KRW, 1100);
+        const finalBank = bank.NewAddExchangeRate(Currency.USD, Currency.KRW, 1100);
 
         //Act
-        const result = finalPortfolio.evaluate(Currency.KRW, bank)
+        const result = finalPortfolio.evaluate(Currency.KRW, finalBank)
 
 
         //Assert
@@ -93,11 +89,10 @@ describe('Portfolio', () => {
         const portfolio = new Portfolio();
         const finalPortfolio = portfolio.add(new Money(5, Currency.USD)).add(new Money(10, Currency.EUR));
 
-        bank.AddExchangeRate(Currency.USD, Currency.EUR, 0.82);
-        bank.AddExchangeRate(Currency.EUR, Currency.KRW, 1344);
+        const finalBank = bank.NewAddExchangeRate(Currency.USD, Currency.EUR, 0.82).NewAddExchangeRate(Currency.EUR, Currency.KRW, 1344).NewAddExchangeRate(Currency.USD, Currency.KRW, 1100)
 
         //Act
-        const result = finalPortfolio.evaluate(Currency.KRW, bank)
+        const result = finalPortfolio.evaluate(Currency.KRW, finalBank)
 
 
         //Assert
@@ -110,10 +105,10 @@ describe('Portfolio', () => {
         const portfolio = new Portfolio();
         const finalPortfolio = portfolio.add(new Money(5, Currency.USD)).add(new Money(10, Currency.EUR));
 
-        bank.AddExchangeRate(Currency.USD, Currency.EUR, 0.82);
+        const finalBank = bank.NewAddExchangeRate(Currency.USD, Currency.EUR, 0.82);
 
         //Act
-        const result = finalPortfolio.evaluate(Currency.EUR, bank)
+        const result = finalPortfolio.evaluate(Currency.EUR, finalBank)
 
         //Assert
         expect(result.value).toBe(14.1);

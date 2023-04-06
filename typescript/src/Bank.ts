@@ -5,6 +5,10 @@ import { Money } from './Money'
 export class Bank {
   private readonly _exchangeRates: Map<string, number> = new Map()
 
+  private constructor(exchangeRates: Map<string, number> = new Map()) {
+    this._exchangeRates = exchangeRates
+  }
+
   /**
    * @param currencyFrom
    * @param currencyTo
@@ -16,8 +20,9 @@ export class Bank {
    */
   static withExchangeRate(currencyFrom: Currency, currencyTo: Currency, rate: number): Bank {
     const bank = new Bank()
-    bank.AddExchangeRate(currencyFrom, currencyTo, rate)
-    return bank
+    const test = bank.NewAddExchangeRate(currencyFrom, currencyTo, rate);
+    return test
+  
   }
 
   /**
@@ -28,8 +33,15 @@ export class Bank {
    * Demande l'ajout d'un taux de change
    * 
    */
-  AddExchangeRate(currencyFrom: Currency, currencyTo: Currency, rate: number): void {
+  OldAddExchangeRate(currencyFrom: Currency, currencyTo: Currency, rate: number): void {
     this._exchangeRates.set(this.keyForExchangeRates(currencyFrom, currencyTo), rate)
+  }
+
+  NewAddExchangeRate(currencyFrom: Currency, currencyTo: Currency, rate: number): Bank {
+    const newMap = new Map(this._exchangeRates);
+    newMap.set(this.keyForExchangeRates(currencyFrom, currencyTo), rate)
+    return new Bank(newMap);
+
   }
 
   /**
@@ -38,14 +50,18 @@ export class Bank {
    * 
    * Convertit la currencyFrom en currencyTo en fonction du taux de change si il existe
    */
-  
+
 
   Convert(money: Money, currency: Currency): Money {
-    if (!(this.canConvert(money.currency, currency))) { throw new MissingExchangeRateError(money.currency, currency) }
 
     if (money.currency === currency) {
       return money
     }
+
+    
+    if (!(this.canConvert(money.currency, currency))) { throw new MissingExchangeRateError(money.currency, currency) }
+
+    
 
     return new Money(money.value * this._exchangeRates.get(this.keyForExchangeRates(money.currency, currency)), currency)
   }
