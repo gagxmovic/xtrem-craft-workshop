@@ -5,7 +5,7 @@ import { Money } from './Money'
 export class Bank {
   private readonly _exchangeRates: Map<string, number> = new Map()
 
-  private constructor(exchangeRates: Map<string, number> = new Map()) {
+  public constructor(exchangeRates: Map<string, number> = new Map()) {
     this._exchangeRates = exchangeRates
   }
 

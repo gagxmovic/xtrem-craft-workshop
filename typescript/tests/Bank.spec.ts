@@ -3,14 +3,38 @@ import { Bank } from '../src/Bank'
 import { MissingExchangeRateError } from '../src/MissingExchangeRateError'
 import { Money } from '../src/Money'
 
+class BankBuilder{
+  private _currency: Currency = Currency.EUR;
+  private _exchangeRates: Map<Currency, number> = new Map<Currency, number>([[Currency.USD, 1.2]]);
+  static aBank = (): BankBuilder => new BankBuilder(); 
+
+  public withPivotCurrency(currency: Currency): BankBuilder{
+    this._currency = currency;
+    return this;
+  }
+
+  addExchangeRate(currency: Currency, rate: number): BankBuilder{
+    this._exchangeRates.set(currency, rate);
+    return this;
+  }
+
+  build(): Bank{
+    let bank = new Bank();
+    this._exchangeRates.forEach((rate: number,currency: Currency) =>{
+      bank = bank.NewAddExchangeRate(this._currency,currency, rate);
+      bank = bank.NewAddExchangeRate(currency,this._currency, 1/rate);
+    })
+    return bank;
+  }
+}
 describe('Bank', function () {
 
+  const bank = BankBuilder.aBank().withPivotCurrency(Currency.EUR).addExchangeRate(Currency.USD,1.2).build();
   test('convert from EUR to USD, assert it returns the correct number', () => {
     //Arrange
-    let bankTest = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
     let money = new Money(10, Currency.EUR);
     //Act
-    let result = bankTest.Convert(money, Currency.USD)
+    let result = bank.Convert(money, Currency.USD)
 
     //Assert
     expect(result.value).toBe(12)
@@ -18,11 +42,10 @@ describe('Bank', function () {
 
   test('convert from usd to usd, assert the returns same value', () => {
     //Arrange
-    let bankTest = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
     let money = new Money(10, Currency.EUR);
 
     //Act
-    let result = bankTest.Convert(money, Currency.EUR)
+    let result = bank.Convert(money, Currency.EUR)
 
     //Assert
     expect(result.value).toBe(10)
@@ -30,23 +53,21 @@ describe('Bank', function () {
 
   test("convert exchange rate that isn't specified, must throw MissingExchangeRateError", () => {
     //Arrange
-    let bankTest = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
     let money = new Money(10, Currency.EUR);
 
     //Act + Assert
-    expect(() => bankTest.Convert(money, Currency.KRW)).toThrow(MissingExchangeRateError).toThrow("EUR-> KRW")
+    expect(() => bank.Convert(money, Currency.KRW)).toThrow(MissingExchangeRateError).toThrow("EUR-> KRW")
 
   })
 
   test('Convert same currency but with different exchange rate, must assert that convert result is different', () => {
 
     //Arrange
-    let bankTest = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2)
     let money = new Money(10, Currency.EUR);
-    let result = bankTest.Convert(money, Currency.USD)
+    let result = bank.Convert(money, Currency.USD)
 
     //Act
-    const finalBank = bankTest.NewAddExchangeRate(Currency.EUR, Currency.USD, 1.3)
+    const finalBank = bank.NewAddExchangeRate(Currency.EUR, Currency.USD, 1.3)
     let newResult = finalBank.Convert(money, Currency.USD)
 
     //Assert
