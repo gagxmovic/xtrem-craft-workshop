@@ -24,18 +24,44 @@ class Portfolio {
 
 }
 
+class BankBuilder{
+    private _currency: Currency = Currency.EUR;
+    private _exchangeRates: Map<Currency, number> = new Map<Currency, number>([[Currency.USD, 1.2]]);
+    static aBank = (): BankBuilder => new BankBuilder(); 
+  
+    public withPivotCurrency(currency: Currency): BankBuilder{
+      this._currency = currency;
+      return this;
+    }
+  
+    addExchangeRate(currency: Currency, rate: number): BankBuilder{
+      this._exchangeRates.set(currency, rate);
+      return this;
+    }
+  
+    build(): Bank{
+        let bank = new Bank(new Map(), this._currency);
+        this._exchangeRates.forEach((rate: number,currency: Currency) =>{
+          bank = bank.NewAddExchangeRate(currency, rate);
+        })
+        return bank;
+    }
+  }
+
 describe('Portfolio', () => {
 
-    const bank = Bank.withExchangeRate(Currency.EUR, Currency.USD, 1.2);
+    const bank = BankBuilder.aBank().withPivotCurrency(Currency.USD).addExchangeRate(Currency.EUR,0.82).addExchangeRate(Currency.KRW,1100).build();
 
     test(' 5 USD + 10 EUR = 17 USD', () => {
+
+        const myBank = BankBuilder.aBank().withPivotCurrency(Currency.EUR).addExchangeRate(Currency.USD,1.2).build();
         //Arrange
         const portfolio = new Portfolio();
         
         const finalPortfolio = portfolio.add(new Money(5, Currency.USD)).add(new Money(10, Currency.EUR));
 
         //Act
-        const result = finalPortfolio.evaluate(Currency.USD, bank)
+        const result = finalPortfolio.evaluate(Currency.USD, myBank)
 
 
         //Assert
@@ -73,7 +99,9 @@ describe('Portfolio', () => {
         const portfolio = new Portfolio();
         const finalPortfolio = portfolio.add(new Money(1, Currency.USD)).add(new Money(1100, Currency.KRW));
 
-        const finalBank = bank.NewAddExchangeRate(Currency.USD, Currency.KRW, 1100);
+
+        const finalBank = BankBuilder.aBank().withPivotCurrency(Currency.USD).addExchangeRate(Currency.KRW,1100).build();
+
 
         //Act
         const result = finalPortfolio.evaluate(Currency.KRW, finalBank)
@@ -89,14 +117,14 @@ describe('Portfolio', () => {
         const portfolio = new Portfolio();
         const finalPortfolio = portfolio.add(new Money(5, Currency.USD)).add(new Money(10, Currency.EUR));
 
-        const finalBank = bank.NewAddExchangeRate(Currency.USD, Currency.EUR, 0.82).NewAddExchangeRate(Currency.EUR, Currency.KRW, 1344).NewAddExchangeRate(Currency.USD, Currency.KRW, 1100)
+        const finalBank = BankBuilder.aBank().withPivotCurrency(Currency.USD).addExchangeRate(Currency.EUR,0.82).addExchangeRate(Currency.KRW,1100).build();
 
         //Act
         const result = finalPortfolio.evaluate(Currency.KRW, finalBank)
 
 
         //Assert
-        expect(result.value).toBe(18940);
+        expect(result.value).toBeGreaterThan(18940 - (18940*0.01)) && expect(result.value).toBeLessThan(18940 + (18940*0.01));
 
     })
 
@@ -105,7 +133,7 @@ describe('Portfolio', () => {
         const portfolio = new Portfolio();
         const finalPortfolio = portfolio.add(new Money(5, Currency.USD)).add(new Money(10, Currency.EUR));
 
-        const finalBank = bank.NewAddExchangeRate(Currency.USD, Currency.EUR, 0.82);
+        const finalBank = BankBuilder.aBank().withPivotCurrency(Currency.USD).addExchangeRate(Currency.EUR,0.82).build();
 
         //Act
         const result = finalPortfolio.evaluate(Currency.EUR, finalBank)

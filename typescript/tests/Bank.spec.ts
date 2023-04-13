@@ -19,10 +19,9 @@ class BankBuilder{
   }
 
   build(): Bank{
-    let bank = new Bank();
+    let bank = new Bank(new Map(), this._currency);
     this._exchangeRates.forEach((rate: number,currency: Currency) =>{
-      bank = bank.NewAddExchangeRate(this._currency,currency, rate);
-      bank = bank.NewAddExchangeRate(currency,this._currency, 1/rate);
+      bank = bank.NewAddExchangeRate(currency, rate);
     })
     return bank;
   }
@@ -62,13 +61,14 @@ describe('Bank', function () {
 
   test('Convert same currency but with different exchange rate, must assert that convert result is different', () => {
 
+    const newBank = BankBuilder.aBank().withPivotCurrency(Currency.EUR).addExchangeRate(Currency.USD,1.3).build();
+
     //Arrange
     let money = new Money(10, Currency.EUR);
     let result = bank.Convert(money, Currency.USD)
 
     //Act
-    const finalBank = bank.NewAddExchangeRate(Currency.EUR, Currency.USD, 1.3)
-    let newResult = finalBank.Convert(money, Currency.USD)
+    let newResult = newBank.Convert(money, Currency.USD)
 
     //Assert
     expect(result.value == newResult.value).toBe(false)
